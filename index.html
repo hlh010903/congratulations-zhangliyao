@@ -2,14 +2,13 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>恭喜张丽瑶毕业</title>
+    <title>🎉 张丽瑶毕业祝福</title>
     <style>
-        /* 简洁美观的样式 */
         body {
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            font-family: 'Segoe UI', sans-serif;
+            background: #f0f2f5;
+            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,24 +16,23 @@
         }
         .container {
             text-align: center;
-            padding: 40px;
+            padding: 30px;
             background: white;
             border-radius: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         h1 {
-            color: #0052cc;
+            color: #007bff;
             font-size: 2.5em;
             margin-bottom: 20px;
         }
         .counter {
-            font-size: 1.8em;
+            font-size: 2em;
             color: #2c3e50;
             margin: 30px 0;
             font-weight: bold;
         }
         .share {
-            margin-top: 20px;
             padding: 12px 30px;
             background: #3498db;
             color: white;
@@ -47,25 +45,28 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎉 恭喜张丽瑶毕业！</h1>
-        <div class="counter">你是第 <span id="counter">1</span> 个祝福的人</div>
-        <button class="share" onclick="share">点击分享给同学</button>
+        <h1>🎉 祝贺张丽瑶顺利毕业！</h1>
+        <div class="counter">你是第 <span id="counter">0</span> 个送上祝福的人</div>
+        <button class="share" onclick="copyLink">点击分享给同学</button>
     </div>
 
     <script>
-        // 使用浏览器存储实现计数（注意：多人同时访问可能有误差）
-        let count = localStorage.getItem('congratulationsCount') || 0;
-        count = parseInt(count) + 1;
-        localStorage.setItem('congratulationsCount', count);
-        document.getElementById('counter').textContent = count;
+        // 替换为你的 CountAPI ID（见步骤1）
+        const COUNT_API_KEY = "your_countapi_id";
+
+        // 获取实时计数
+        fetch(`https://api.countapi.xyz/hit/ $ {COUNT_API_KEY}?format=json`)
+            .then(response => response.json)
+            .then(data => {
+                document.getElementById('counter').textContent = data.value;
+            });
 
         // 分享功能
-        function share {
+        function copyLink {
             const link = window.location.href;
-            const text = `快来为张丽瑶的毕业送上祝福！ $ {link}`;
-            navigator.clipboard.writeText(text)
+            navigator.clipboard.writeText(link)
                 .then( => {
-                    alert('链接已复制到剪贴板，可以分享给同学啦～');
+                    alert('链接已复制，快分享给同学吧！');
                 });
         }
     </script>
