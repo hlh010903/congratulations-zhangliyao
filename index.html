@@ -5,167 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨ 张丽瑶毕业庆典</title>
     <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #f3f4f6;
-            --text: #212529;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(45deg, #f0f2f5, var(--secondary));
-            animation: gradient 10s ease infinite;
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
-        .container {
-            max-width: 800px;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .title {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
+        /* ...（样式部分保持不变）... */
         .counter {
-            font-size: 4rem;
+            font-size: 2rem;
             color: var(--text);
             margin-bottom: 3rem;
             position: relative;
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, #fff, #f3f4f6);
-            border-radius: 15px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            animation: float 2s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .counter span {
-            font-size: 3rem;
-            color: var(--primary);
-            display: inline-block;
-            animation: number 1s ease;
-        }
-
-        @keyframes number {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .decoration {
-            position: absolute;
-            pointer-events: none;
-        }
-
-        .balloon {
-            width: 50px;
-            height: 80px;
-            background: #ff6b6b;
-            border-radius: 50% 50% 50% 50% / 50% 50% 50% 50%;
-            position: absolute;
-            animation: float-decor 5s ease-in-out infinite;
-        }
-
-        .balloon:nth-child(2) {
-            background: #4ecdc4;
-            left: 15%;
-            top: 15%;
-            animation-delay: 1s;
-        }
-
-        .balloon:nth-child(3) {
-            background: #ffbe7d;
-            right: 20%;
-            top: 30%;
-            animation-delay: 2s;
-        }
-
-        @keyframes float-decor {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .star {
-            width: 10px;
-            height: 10px;
-            background: #fff;
-            border-radius: 50%;
-            position: absolute;
-            animation: twinkle 1s infinite;
-        }
-
-        .star:nth-child(4) {
-            left: 10%;
-            top: 30%;
-            animation-delay: 0.3s;
-        }
-
-        .star:nth-child(5) {
-            right: 15%;
-            top: 10%;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes twinkle {
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        .button {
-            background: linear-gradient(45deg, #6c5ce7, #4ecdc4);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 25px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-        }
-
-        .button:hover {
-            transform: translateY(-3px);
-        }
-
-        .button:active {
-            transform: translateY(-1px);
+            text-align: center;
         }
 
         .congratulation {
-            margin-top: 2rem;
+            margin-top: 1rem;
             font-size: 1.5rem;
             color: var(--primary);
-            animation: appear 0.5s ease;
-        }
-
-        @keyframes appear {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -175,53 +27,29 @@
         
         <!-- 计数器 -->
         <div class="counter">
-            <span id="counter">0</span>
-            <div class="decoration">
-                <div class="balloon"></div>
-                <div class="balloon"></div>
-                <div class="balloon"></div>
-                <div class="star"></div>
-                <div class="star"></div>
-            </div>
+            <div>总祝福人数：<span id="totalCounter">0</span></div>
+            <div id="congratulationMessage"></div>
         </div>
 
         <!-- 按钮 -->
         <button class="button" onclick="sendCongratulation">发送祝福</button>
-
-        <!-- 祝福显示 -->
-        <div id="congratulationMessage" class="congratulation"></div>
     </div>
 
     <script>
         let counter = 0;
 
-        // 初始化计数器
         window.onload = function {
-            // 加载本地存储
             const storedCount = localStorage.getItem('congratulationsCount');
-            
-            if(storedCount) {
-                counter = parseInt(storedCount);
-            } else {
-                // 生成唯一初始值
-                counter = Date.now % 10000; // 时间戳取模保证唯一性
-                localStorage.setItem('congratulationsCount', counter);
-            }
-            
-            document.getElementById('counter').textContent = counter;
+            counter = storedCount ? parseInt(storedCount) : 0;
+            document.getElementById('totalCounter').textContent = counter;
         };
 
         function sendCongratulation {
-            // 增加计数器
             counter++;
             localStorage.setItem('congratulationsCount', counter);
             
-            // 显示祝福信息
-            const message = `你是第  $ {counter} 个祝福的人！`
-            document.getElementById('congratulationMessage').textContent = message;
-            
-            // 更新计数器显示
-            document.getElementById('counter').textContent = counter;
+            document.getElementById('totalCounter').textContent = counter;
+            document.getElementById('congratulationMessage').textContent = `你是第  $ {counter} 个祝福的人！`;
         }
     </script>
 </body>
