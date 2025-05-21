@@ -3,55 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎉 张丽瑶毕业祝福</title>
+    <title>✨ 张丽瑶的毕业庆典</title>
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #f0f2f5;
-            font-family: 'Segoe UI', Arial, sans-serif;
+        /* 动态加载动画 */
+        .counter span {
+            animation: load 0.8s ease-in-out;
+        }
+
+        @keyframes load {
+            0% { transform: translateY(-20px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        /* 防刷动画 */
+        .shake {
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translateX(-1px); }
+            20%, 80% { transform: translateX(2px); }
+            30%, 70% { transform: translateX(-3px); }
+            40%, 60% { transform: translateY(4px); }
+            50%      { transform: translateY(-5px); }
+        }
+
+        /* 历史记录样式 */
+        .history {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .history-item {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            background: #fff;
+            border-radius: 8px;
         }
-        .container {
-            text-align: center;
-            padding: 40px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-            max-width: 600px;
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
         }
-        h1 {
-            color: #007bff;
-            font-size: 2.5em;
-            margin-bottom: 30px;
-        }
-        .counter {
-            font-size: 2.5em;
-            color: #2c3e50;
-            font-weight: bold;
-            margin: 40px 0;
+
+        .time {
+            font-size: 0.9em;
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎉 祝贺张丽瑶顺利毕业！</h1>
-        <div class="counter">你是第 <span id="counter">0</span> 个送上祝福的人</div>
+        <div class="title">🎉 张丽瑶毕业庆典</div>
+        
+        <!-- 计数器 -->
+        <div class="counter">你是第 <span id="counter">1</span> 个送上祝福的人</div>
+        
+        <!-- 按钮 -->
+        <div class="button">
+            <button onclick="updateCounter" id="sendBtn">
+                点击发送祝福
+            </button>
+        </div>
+
+        <!-- 历史记录 -->
+        <div class="history">
+            <h3>祝福记录</h3>
+            <div id="historyList"></div>
+        </div>
     </div>
 
     <script>
-        // 替换为你的 CountAPI ID（见步骤1）
-        const COUNT_API_KEY = "your_countapi_id";
+        let counter = 0;
+        let lastClick = 0;
+        const clickDelay = 2000; // 防刷间隔2秒
 
-        // 获取实时计数
-        fetch(`https://api.countapi.xyz/hit/ $ {COUNT_API_KEY}?format=json`)
-            .then(response => response.json)
-            .then(data => {
-                document.getElementById('counter').textContent = data.value;
-            });
+        // 初始化计数器
+        window.onload = function {
+            // 加载本地存储
+            const storedCount = localStorage.getItem('congratulationsCount');
+            
+            if(storedCount) {
+                counter = parseInt(storedCount);
+            } else {
+                // 生成唯一初始值
+                counter = Date.now % 10000; // 时间戳取模保证唯一性
+                localStorage.setItem('congratulationsCount', counter);
+            }
+            
+            document.getElementById('counter').textContent = counter;
+
+            // 加载历史记录
+            const history = JSON.parse(localStorage.getItem('congratulationsHistory')) || [];
+            updateHistoryList(history);
+        };
+
+        // 递增计数器
+        function updateCounter {
+            const now = Date.now;
+            
+            if(now - lastClick < clickDelay) {
+                alert('请勿频繁点击，2秒后重试');
+                return;
+            }
+
+            lastClick = now;
+            counter++;
+            
+            // 更新计数器
+            document.getElementById('counter').textContent = counter;
+            localStorage.setItem('congratulationsCount', counter);
+            
+            // 添加历史记录
+            const historyItem = {
+                id: counter,
+                time: new Date.toLocaleString,
+                ip: '127.0.0.1' // 需后端支持获取真实IP
+            };
+            
+            const history = JSON.parse(localStorage.getItem('congratulationsHistory')) || [];
+            history.push(historyItem);
+            localStorage.setItem('congratulationsHistory', JSON.stringify(history));
+            updateHistoryList(history);
+            
+            // 添加点击反馈
+            document.getElementById('sendBtn').classList.add('shake');
+            setTimeout( => {
+                document.getElementById('sendBtn').classList.remove('shake');
+            }, 500);
+        }
+
+        // 更新历史记录列表
+        function updateHistoryList(history) {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <span class="id">祝福ID:  $ {item.id}</span>
+                    <span class="time"> $ {item.time}</span>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
